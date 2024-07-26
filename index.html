@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>High Paying Translator</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css">
     <style>
         body {
             font-family: Calibri, Arial, sans-serif;
@@ -112,6 +113,11 @@
         .language-label {
             font-weight: bold;
             margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .flag-icon {
+            margin-right: 5px;
         }
         textarea.over-limit {
             border-color: #e74c3c;
@@ -169,16 +175,16 @@
 
     <script>
         const languages = [
-            {code: 'ar', name: 'Arab'},
-            {code: 'nl', name: 'Belanda'},
-            {code: 'en', name: 'Inggris'},
-            {code: 'id', name: 'Indonesia'},
-            {code: 'it', name: 'Italia'},
-            {code: 'ja', name: 'Jepang'},
-            {code: 'de', name: 'Jerman'},
-            {code: 'fr', name: 'Prancis'},
-            {code: 'ru', name: 'Rusia'},
-            {code: 'es', name: 'Spanyol'}
+            {code: 'ar', name: 'Arab', flag: 'sa'},
+            {code: 'nl', name: 'Belanda', flag: 'nl'},
+            {code: 'en', name: 'Inggris', flag: 'gb'},
+            {code: 'id', name: 'Indonesia', flag: 'id'},
+            {code: 'it', name: 'Italia', flag: 'it'},
+            {code: 'ja', name: 'Jepang', flag: 'jp'},
+            {code: 'de', name: 'Jerman', flag: 'de'},
+            {code: 'fr', name: 'Prancis', flag: 'fr'},
+            {code: 'ru', name: 'Rusia', flag: 'ru'},
+            {code: 'es', name: 'Spanyol', flag: 'es'}
         ];
 
         function openTab(evt, tabName) {
@@ -217,7 +223,13 @@
 
             const label = document.createElement('div');
             label.className = 'language-label';
-            label.textContent = language.name;
+            
+            const flagSpan = document.createElement('span');
+            flagSpan.className = `fi fi-${language.flag}`;
+            flagSpan.style.marginRight = '5px';
+            
+            label.appendChild(flagSpan);
+            label.appendChild(document.createTextNode(language.name));
             section.appendChild(label);
 
             const inputContainer = document.createElement('div');
