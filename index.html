@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HPK Translator (DeepL)</title>
+    <title>HPK Translator (Google)</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         body {
@@ -88,7 +88,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>HPK Translator (DeepL)</h1>
+        <h1>HPK Translator (Google)</h1>
         
         <div class="tabs">
             <button class="tab active" onclick="openTab(event, 'translator')">Translator</button>
@@ -114,16 +114,16 @@
         const MAX_CHARS = 100;
         const DESCRIPTION_MAX_CHARS = 5000;
         const languages = [
-            {code: 'AR', name: 'Arab'},
-            {code: 'NL', name: 'Belanda'},
-            {code: 'EN-GB', name: 'Inggris'},
-            {code: 'ID', name: 'Indonesia'},
-            {code: 'IT', name: 'Italia'},
-            {code: 'JA', name: 'Jepang'},
-            {code: 'DE', name: 'Jerman'},
-            {code: 'FR', name: 'Prancis'},
-            {code: 'RU', name: 'Rusia'},
-            {code: 'ES', name: 'Spanyol'}
+            {code: 'ar', name: 'Arab'},
+            {code: 'nl', name: 'Belanda'},
+            {code: 'en', name: 'Inggris'},
+            {code: 'id', name: 'Indonesia'},
+            {code: 'it', name: 'Italia'},
+            {code: 'ja', name: 'Jepang'},
+            {code: 'de', name: 'Jerman'},
+            {code: 'fr', name: 'Prancis'},
+            {code: 'ru', name: 'Rusia'},
+            {code: 'es', name: 'Spanyol'}
         ];
 
         function openTab(evt, tabName) {
@@ -187,16 +187,33 @@
             });
         }
 
-        function translateText() {
+        async function translateText() {
             const sourceText = document.getElementById('sourceText').value;
-            languages.forEach(lang => {
-                // In a real implementation, you would call the DeepL API here
-                // For this example, we'll just append the language code to the source text
-                const translatedText = `${sourceText} (${lang.code})`;
-                const translationTextarea = document.getElementById(`translation_${lang.code}`);
-                translationTextarea.value = translatedText;
-                updateCharCount(translationTextarea);
-            });
+            if (!sourceText) return;
+
+            for (const lang of languages) {
+                try {
+                    const translatedText = await googleTranslate(sourceText, lang.code);
+                    const translationTextarea = document.getElementById(`translation_${lang.code}`);
+                    translationTextarea.value = translatedText;
+                    updateCharCount(translationTextarea);
+                } catch (error) {
+                    console.error(`Translation error for ${lang.name}:`, error);
+                }
+            }
+        }
+
+        async function googleTranslate(text, targetLang) {
+            const sourceLang = 'auto';
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+            
+            try {
+                const response = await axios.get(url);
+                return response.data[0][0][0];
+            } catch (error) {
+                console.error('Translation error:', error);
+                return 'Translation error';
+            }
         }
 
         function resetAll() {
