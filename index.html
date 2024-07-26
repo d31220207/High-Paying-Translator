@@ -65,12 +65,18 @@
         .char-count {
             margin-bottom: 10px;
         }
+        .char-count.over-limit {
+            color: #e74c3c;
+        }
         .language-section {
             margin-bottom: 20px;
         }
         .language-label {
             font-weight: bold;
             margin-bottom: 5px;
+        }
+        textarea.over-limit {
+            border-color: #e74c3c;
         }
         @media (max-width: 768px) {
             .container {
@@ -88,7 +94,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>HPK Translator (Google)</h1>
+        <h1 id="mainTitle">HPK Translator (Google)</h1>
         
         <div class="tabs">
             <button class="tab active" onclick="openTab(event, 'translator')">Translator</button>
@@ -96,10 +102,10 @@
         </div>
 
         <div id="translator" class="tab-content active">
-            <textarea id="sourceText" placeholder="Enter text to translate" oninput="updateCharCount(this)"></textarea>
+            <textarea id="sourceText" placeholder="Enter text to translate" oninput="updateCharCount(this); translateTitle();"></textarea>
             <div class="char-count" id="sourceCharCount">0/100</div>
-            <button onclick="translateText()">Translate</button>
-            <button onclick="resetAll()">Reset</button>
+            <button onclick="translateText('translator')">Translate</button>
+            <button onclick="resetAll('translator')">Reset</button>
 
             <div id="translations"></div>
         </div>
@@ -107,6 +113,10 @@
         <div id="description" class="tab-content">
             <textarea id="descriptionText" placeholder="Enter description (max 5000 characters)" oninput="updateCharCount(this, 5000)"></textarea>
             <div class="char-count" id="descriptionCharCount">0/5000</div>
+            <button onclick="translateText('description')">Translate</button>
+            <button onclick="resetAll('description')">Reset</button>
+
+            <div id="descriptionTranslations"></div>
         </div>
     </div>
 
@@ -147,12 +157,15 @@
             charCountElement.textContent = `${charCount}/${limit}`;
 
             if (charCount > limit) {
-                textarea.value = textarea.value.slice(0, limit);
-                updateCharCount(textarea, limit);
+                textarea.classList.add('over-limit');
+                charCountElement.classList.add('over-limit');
+            } else {
+                textarea.classList.remove('over-limit');
+                charCountElement.classList.remove('over-limit');
             }
         }
 
-        function createLanguageSection(language) {
+        function createLanguageSection(language, containerID) {
             const section = document.createElement('div');
             section.className = 'language-section';
 
@@ -162,13 +175,13 @@
             section.appendChild(label);
 
             const textarea = document.createElement('textarea');
-            textarea.id = `translation_${language.code}`;
+            textarea.id = `${containerID}_translation_${language.code}`;
             textarea.readOnly = true;
             section.appendChild(textarea);
 
             const charCount = document.createElement('div');
             charCount.className = 'char-count';
-            charCount.id = `translation_${language.code}CharCount`;
+            charCount.id = `${containerID}_translation_${language.code}CharCount`;
             charCount.textContent = '0/100';
             section.appendChild(charCount);
 
@@ -182,24 +195,41 @@
 
         function initializeTranslationSections() {
             const translationsContainer = document.getElementById('translations');
+            const descriptionTranslationsContainer = document.getElementById('descriptionTranslations');
             languages.forEach(lang => {
-                translationsContainer.appendChild(createLanguageSection(lang));
+                translationsContainer.appendChild(createLanguageSection(lang, 'translator'));
+                descriptionTranslationsContainer.appendChild(createLanguageSection(lang, 'description'));
             });
         }
 
-        async function translateText() {
-            const sourceText = document.getElementById('sourceText').value;
+        async function translateText(tabName) {
+            const sourceText = document.getElementById(tabName === 'translator' ? 'sourceText' : 'descriptionText').value;
             if (!sourceText) return;
+
+            const containerID = tabName === 'translator' ? 'translator' : 'description';
+            const maxChars = tabName === 'translator' ? MAX_CHARS : DESCRIPTION_MAX_CHARS;
 
             for (const lang of languages) {
                 try {
                     const translatedText = await googleTranslate(sourceText, lang.code);
-                    const translationTextarea = document.getElementById(`translation_${lang.code}`);
+                    const translationTextarea = document.getElementById(`${containerID}_translation_${lang.code}`);
                     translationTextarea.value = translatedText;
-                    updateCharCount(translationTextarea);
+                    updateCharCount(translationTextarea, maxChars);
                 } catch (error) {
                     console.error(`Translation error for ${lang.name}:`, error);
                 }
+            }
+        }
+
+        async function translateTitle() {
+            const sourceText = document.getElementById('sourceText').value;
+            if (!sourceText) return;
+
+            try {
+                const translatedTitle = await googleTranslate(sourceText, 'en');
+                document.getElementById('mainTitle').textContent = translatedTitle;
+            } catch (error) {
+                console.error('Title translation error:', error);
             }
         }
 
@@ -216,14 +246,23 @@
             }
         }
 
-        function resetAll() {
-            document.getElementById('sourceText').value = '';
-            updateCharCount(document.getElementById('sourceText'));
+        function resetAll(tabName) {
+            const textareaId = tabName === 'translator' ? 'sourceText' : 'descriptionText';
+            document.getElementById(textareaId).value = '';
+            updateCharCount(document.getElementById(textareaId));
+            
+            const containerID = tabName === 'translator' ? 'translator' : 'description';
+            const maxChars = tabName === 'translator' ? MAX_CHARS : DESCRIPTION_MAX_CHARS;
+
             languages.forEach(lang => {
-                const translationTextarea = document.getElementById(`translation_${lang.code}`);
+                const translationTextarea = document.getElementById(`${containerID}_translation_${lang.code}`);
                 translationTextarea.value = '';
-                updateCharCount(translationTextarea);
+                updateCharCount(translationTextarea, maxChars);
             });
+
+            if (tabName === 'translator') {
+                document.getElementById('mainTitle').textContent = 'HPK Translator (Google)';
+            }
         }
 
         function copyToClipboard(elementId) {
