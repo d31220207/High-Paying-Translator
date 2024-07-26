@@ -26,6 +26,7 @@
         h1 {
             text-align: center;
             font-size: 24px;
+            color: #2980b9;
         }
 
         .tabs {
@@ -84,14 +85,14 @@
         }
 
         button {
-            padding: 10px 20px;
+            padding: 5px 10px;
             color: white;
             border: none;
             cursor: pointer;
             margin: 5px;
             font-family: Calibri, Arial, sans-serif;
-            font-size: 16px;
-            min-width: 100px;
+            font-size: 14px;
+            min-width: 80px;
             border-radius: 5px;
         }
 
@@ -151,6 +152,13 @@
             border-color: #e74c3c;
         }
 
+        .developer-credit {
+            text-align: center;
+            font-size: 12px;
+            color: #424242;
+            margin-top: 20px;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -204,6 +212,8 @@
             </div>
             <div id="descriptionTranslations"></div>
         </div>
+
+        <div class="developer-credit">Developed by Afkar</div>
     </div>
 
     <script>
@@ -373,7 +383,11 @@
             const element = document.getElementById(elementId);
             element.select();
             document.execCommand('copy');
-            alert('Teks Berhasil Disalin.');
+            const copyButton = element.nextElementSibling;
+            copyButton.textContent = 'Copied';
+            setTimeout(() => {
+                copyButton.textContent = 'Copy';
+            }, 2000);
         }
 
         initializeTranslationSections();
