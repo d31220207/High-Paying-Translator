@@ -26,6 +26,9 @@
         h1 {
             text-align: center;
             font-size: 24px;
+        }
+
+        h1 span {
             color: #2980b9;
         }
 
@@ -182,7 +185,7 @@
 
 <body>
     <div class="container">
-        <h1 id="mainTitle">HIGH PAYING TRANSLATOR</h1>
+        <h1 id="mainTitle">HIGH PAYING <span>TRANSLATOR</span></h1>
 
         <div class="tabs">
             <button class="tab active" onclick="openTab(event, 'translator')">Judul</button>
@@ -294,7 +297,7 @@
             const copyButton = document.createElement('button');
             copyButton.textContent = 'Copy';
             copyButton.className = 'copy';
-            copyButton.onclick = () => copyToClipboard(textarea.id);
+            copyButton.onclick = () => copyToClipboard(textarea.id, copyButton);
             section.appendChild(copyButton);
 
             return section;
@@ -379,14 +382,13 @@
             });
         }
 
-        function copyToClipboard(elementId) {
+        function copyToClipboard(elementId, button) {
             const element = document.getElementById(elementId);
             element.select();
             document.execCommand('copy');
-            const copyButton = element.nextElementSibling;
-            copyButton.textContent = 'Copied';
+            button.textContent = 'Copied';
             setTimeout(() => {
-                copyButton.textContent = 'Copy';
+                button.textContent = 'Copy';
             }, 2000);
         }
 
