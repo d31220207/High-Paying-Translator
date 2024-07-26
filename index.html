@@ -102,7 +102,7 @@
         </div>
 
         <div id="translator" class="tab-content active">
-            <textarea id="sourceText" placeholder="Enter text to translate" oninput="updateCharCount(this); translateTitle();"></textarea>
+            <textarea id="sourceText" placeholder="Enter text to translate (max 100 characters)" oninput="updateCharCount(this, 100); translateTitle();"></textarea>
             <div class="char-count" id="sourceCharCount">0/100</div>
             <button onclick="translateText('translator')">Translate</button>
             <button onclick="resetAll('translator')">Reset</button>
@@ -121,8 +121,6 @@
     </div>
 
     <script>
-        const MAX_CHARS = 100;
-        const DESCRIPTION_MAX_CHARS = 5000;
         const languages = [
             {code: 'ar', name: 'Arab'},
             {code: 'nl', name: 'Belanda'},
@@ -151,7 +149,7 @@
             evt.currentTarget.classList.add("active");
         }
 
-        function updateCharCount(textarea, limit = MAX_CHARS) {
+        function updateCharCount(textarea, limit) {
             const charCount = textarea.value.length;
             const charCountElement = document.getElementById(textarea.id + 'CharCount');
             charCountElement.textContent = `${charCount}/${limit}`;
@@ -159,13 +157,14 @@
             if (charCount > limit) {
                 textarea.classList.add('over-limit');
                 charCountElement.classList.add('over-limit');
+                textarea.value = textarea.value.slice(0, limit);
             } else {
                 textarea.classList.remove('over-limit');
                 charCountElement.classList.remove('over-limit');
             }
         }
 
-        function createLanguageSection(language, containerID) {
+        function createLanguageSection(language, containerID, charLimit) {
             const section = document.createElement('div');
             section.className = 'language-section';
 
@@ -182,7 +181,7 @@
             const charCount = document.createElement('div');
             charCount.className = 'char-count';
             charCount.id = `${containerID}_translation_${language.code}CharCount`;
-            charCount.textContent = '0/100';
+            charCount.textContent = `0/${charLimit}`;
             section.appendChild(charCount);
 
             const copyButton = document.createElement('button');
@@ -197,8 +196,8 @@
             const translationsContainer = document.getElementById('translations');
             const descriptionTranslationsContainer = document.getElementById('descriptionTranslations');
             languages.forEach(lang => {
-                translationsContainer.appendChild(createLanguageSection(lang, 'translator'));
-                descriptionTranslationsContainer.appendChild(createLanguageSection(lang, 'description'));
+                translationsContainer.appendChild(createLanguageSection(lang, 'translator', 100));
+                descriptionTranslationsContainer.appendChild(createLanguageSection(lang, 'description', 5000));
             });
         }
 
@@ -206,8 +205,8 @@
             const sourceText = document.getElementById(tabName === 'translator' ? 'sourceText' : 'descriptionText').value;
             if (!sourceText) return;
 
-            const containerID = tabName === 'translator' ? 'translator' : 'description';
-            const maxChars = tabName === 'translator' ? MAX_CHARS : DESCRIPTION_MAX_CHARS;
+            const containerID = tabName;
+            const maxChars = tabName === 'translator' ? 100 : 5000;
 
             for (const lang of languages) {
                 try {
@@ -248,14 +247,12 @@
 
         function resetAll(tabName) {
             const textareaId = tabName === 'translator' ? 'sourceText' : 'descriptionText';
+            const maxChars = tabName === 'translator' ? 100 : 5000;
             document.getElementById(textareaId).value = '';
-            updateCharCount(document.getElementById(textareaId));
+            updateCharCount(document.getElementById(textareaId), maxChars);
             
-            const containerID = tabName === 'translator' ? 'translator' : 'description';
-            const maxChars = tabName === 'translator' ? MAX_CHARS : DESCRIPTION_MAX_CHARS;
-
             languages.forEach(lang => {
-                const translationTextarea = document.getElementById(`${containerID}_translation_${lang.code}`);
+                const translationTextarea = document.getElementById(`${tabName}_translation_${lang.code}`);
                 translationTextarea.value = '';
                 updateCharCount(translationTextarea, maxChars);
             });
