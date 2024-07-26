@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         body {
-            font-family: Roboto, sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #2c2c2c;
@@ -41,15 +41,23 @@
         .tab-content.active {
             display: block;
         }
+        .input-container {
+            position: relative;
+            margin-bottom: 10px;
+        }
         textarea {
             width: 100%;
             height: 150px;
-            margin-bottom: 10px;
             background-color: #424242;
             color: white;
             border: 1px solid #555;
             padding: 10px;
             box-sizing: border-box;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
         }
         button {
             padding: 10px 20px;
@@ -57,13 +65,18 @@
             color: white;
             border: none;
             cursor: pointer;
-            margin-right: 10px;
+            margin: 0 5px;
         }
         button:hover {
             background-color: #176839;
         }
         .char-count {
-            margin-bottom: 10px;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 2px 5px;
+            border-radius: 3px;
         }
         .char-count.over-limit {
             color: #e74c3c;
@@ -102,20 +115,26 @@
         </div>
 
         <div id="translator" class="tab-content active">
-            <textarea id="sourceText" placeholder="Enter text to translate (max 100 characters)" oninput="updateCharCount(this, 100); translateTitle();"></textarea>
-            <div class="char-count" id="sourceCharCount">0/100</div>
-            <button onclick="translateText('translator')">Translate</button>
-            <button onclick="resetAll('translator')">Reset</button>
-
+            <div class="input-container">
+                <textarea id="sourceText" placeholder="Enter text to translate (max 100 characters)" oninput="updateCharCount(this, 100); translateTitle();"></textarea>
+                <div class="char-count" id="sourceCharCount">0/100</div>
+            </div>
+            <div class="button-container">
+                <button onclick="translateText('translator')">Translate</button>
+                <button onclick="resetAll('translator')">Reset</button>
+            </div>
             <div id="translations"></div>
         </div>
 
         <div id="description" class="tab-content">
-            <textarea id="descriptionText" placeholder="Enter description (max 5000 characters)" oninput="updateCharCount(this, 5000)"></textarea>
-            <div class="char-count" id="descriptionCharCount">0/5000</div>
-            <button onclick="translateText('description')">Translate</button>
-            <button onclick="resetAll('description')">Reset</button>
-
+            <div class="input-container">
+                <textarea id="descriptionText" placeholder="Enter description (max 5000 characters)" oninput="updateCharCount(this, 5000)"></textarea>
+                <div class="char-count" id="descriptionCharCount">0/5000</div>
+            </div>
+            <div class="button-container">
+                <button onclick="translateText('description')">Translate</button>
+                <button onclick="resetAll('description')">Reset</button>
+            </div>
             <div id="descriptionTranslations"></div>
         </div>
     </div>
@@ -173,16 +192,21 @@
             label.textContent = language.name;
             section.appendChild(label);
 
+            const inputContainer = document.createElement('div');
+            inputContainer.className = 'input-container';
+
             const textarea = document.createElement('textarea');
             textarea.id = `${containerID}_translation_${language.code}`;
             textarea.readOnly = true;
-            section.appendChild(textarea);
+            inputContainer.appendChild(textarea);
 
             const charCount = document.createElement('div');
             charCount.className = 'char-count';
             charCount.id = `${containerID}_translation_${language.code}CharCount`;
             charCount.textContent = `0/${charLimit}`;
-            section.appendChild(charCount);
+            inputContainer.appendChild(charCount);
+
+            section.appendChild(inputContainer);
 
             const copyButton = document.createElement('button');
             copyButton.textContent = 'Copy';
