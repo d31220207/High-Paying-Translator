@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,20 +16,24 @@
             color: white;
             font-size: 16px;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
+
         h1 {
             text-align: center;
             font-size: 24px;
         }
+
         .tabs {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
         }
+
         .tab {
             padding: 10px 20px;
             background-color: #424242;
@@ -39,19 +44,24 @@
             max-width: 200px;
             border-radius: 5px;
         }
+
         .tab.active {
             background-color: #3498db;
         }
+
         .tab-content {
             display: none;
         }
+
         .tab-content.active {
             display: block;
         }
+
         .input-container {
             position: relative;
             margin-bottom: 10px;
         }
+
         textarea {
             width: 100%;
             height: 150px;
@@ -65,12 +75,14 @@
             border-radius: 5px;
             white-space: pre-wrap;
         }
+
         .button-container {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
+
         button {
             padding: 10px 20px;
             color: white;
@@ -82,24 +94,31 @@
             min-width: 100px;
             border-radius: 5px;
         }
+
         button.translate {
             background-color: #1f8b4c;
         }
+
         button.translate:hover {
             background-color: #176839;
         }
+
         button.reset {
             background-color: #e74c3c;
         }
+
         button.reset:hover {
             background-color: #c0392b;
         }
+
         button.copy {
             background-color: #3498db;
         }
+
         button.copy:hover {
             background-color: #2980b9;
         }
+
         .char-count {
             position: absolute;
             right: 10px;
@@ -108,45 +127,55 @@
             padding: 2px 5px;
             border-radius: 3px;
         }
+
         .char-count.over-limit {
             color: #e74c3c;
         }
+
         .language-section {
             margin-bottom: 20px;
         }
+
         .language-label {
             font-weight: bold;
             margin-bottom: 5px;
             display: flex;
             align-items: center;
         }
+
         .flag-icon {
             margin-right: 5px;
         }
+
         textarea.over-limit {
             border-color: #e74c3c;
         }
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
             }
+
             .tabs {
                 flex-direction: row;
             }
+
             .tab {
                 width: 50%;
                 text-align: center;
             }
+
             button {
                 width: calc(50% - 10px);
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1 id="mainTitle">HIGH PAYING TRANSLATOR</h1>
-        
+
         <div class="tabs">
             <button class="tab active" onclick="openTab(event, 'translator')">Judul</button>
             <button class="tab" onclick="openTab(event, 'description')">Deskripsi</button>
@@ -179,16 +208,16 @@
 
     <script>
         const languages = [
-            {code: 'ar', name: 'Arab', flag: 'sa'},
-            {code: 'nl', name: 'Belanda', flag: 'nl'},
-            {code: 'en', name: 'Inggris', flag: 'gb'},
-            {code: 'id', name: 'Indonesia', flag: 'id'},
-            {code: 'it', name: 'Italia', flag: 'it'},
-            {code: 'ja', name: 'Jepang', flag: 'jp'},
-            {code: 'de', name: 'Jerman', flag: 'de'},
-            {code: 'fr', name: 'Prancis', flag: 'fr'},
-            {code: 'ru', name: 'Rusia', flag: 'ru'},
-            {code: 'es', name: 'Spanyol', flag: 'es'}
+            { code: 'ar', name: 'Arab', flag: 'sa' },
+            { code: 'nl', name: 'Belanda', flag: 'nl' },
+            { code: 'en', name: 'Inggris', flag: 'gb' },
+            { code: 'id', name: 'Indonesia', flag: 'id' },
+            { code: 'it', name: 'Italia', flag: 'it' },
+            { code: 'ja', name: 'Jepang', flag: 'jp' },
+            { code: 'de', name: 'Jerman', flag: 'de' },
+            { code: 'fr', name: 'Prancis', flag: 'fr' },
+            { code: 'ru', name: 'Rusia', flag: 'ru' },
+            { code: 'es', name: 'Spanyol', flag: 'es' }
         ];
 
         function openTab(evt, tabName) {
@@ -226,11 +255,11 @@
 
             const label = document.createElement('div');
             label.className = 'language-label';
-            
+
             const flagSpan = document.createElement('span');
             flagSpan.className = `fi fi-${language.flag}`;
             flagSpan.style.marginRight = '5px';
-            
+
             label.appendChild(flagSpan);
             label.appendChild(document.createTextNode(language.name));
             section.appendChild(label);
@@ -269,10 +298,10 @@
                 descriptionTranslationsContainer.appendChild(createLanguageSection(lang, 'description', 5000));
             });
 
-            document.getElementById('sourceText').addEventListener('input', function() {
+            document.getElementById('sourceText').addEventListener('input', function () {
                 updateCharCount(this, 100);
             });
-            document.getElementById('descriptionText').addEventListener('input', function() {
+            document.getElementById('descriptionText').addEventListener('input', function () {
                 updateCharCount(this, 5000);
             });
         }
@@ -303,10 +332,10 @@
 
             for (const chunk of chunks) {
                 const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(chunk)}`;
-                
+
                 try {
                     const response = await axios.get(url);
-                    const translatedChunk = response.data[0].map(sentence => sentence[0]).join(' ');
+                    const translatedChunk = response.data[0].map(sentence => sentence[0]).join('');
                     translatedChunks.push(translatedChunk);
                 } catch (error) {
                     console.error('Translation error:', error);
@@ -314,7 +343,7 @@
                 }
             }
 
-            return translatedChunks.join(' ');
+            return translatedChunks.join('');
         }
 
         function splitTextIntoChunks(text, maxChunkSize) {
@@ -332,7 +361,7 @@
             const maxChars = tabName === 'translator' ? 100 : 5000;
             document.getElementById(textareaId).value = '';
             updateCharCount(document.getElementById(textareaId), maxChars);
-            
+
             languages.forEach(lang => {
                 const translationTextarea = document.getElementById(`${tabName}_translation_${lang.code}`);
                 translationTextarea.value = '';
@@ -350,4 +379,5 @@
         initializeTranslationSections();
     </script>
 </body>
+
 </html>
