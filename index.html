@@ -25,6 +25,7 @@
         }
         .tabs {
             display: flex;
+            justify-content: center;
             margin-bottom: 20px;
         }
         .tab {
@@ -33,6 +34,8 @@
             cursor: pointer;
             border: none;
             color: white;
+            flex: 1;
+            max-width: 200px;
         }
         .tab.active {
             background-color: #1f8b4c;
@@ -62,15 +65,17 @@
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         button {
             padding: 10px 20px;
             color: white;
             border: none;
             cursor: pointer;
-            margin: 0 5px;
+            margin: 5px;
             font-family: Calibri, Arial, sans-serif;
             font-size: 16px;
+            min-width: 100px;
         }
         button.translate {
             background-color: #1f8b4c;
@@ -83,6 +88,12 @@
         }
         button.reset:hover {
             background-color: #c0392b;
+        }
+        button.copy {
+            background-color: #3498db;
+        }
+        button.copy:hover {
+            background-color: #2980b9;
         }
         .char-count {
             position: absolute;
@@ -110,11 +121,14 @@
                 padding: 10px;
             }
             .tabs {
-                flex-direction: column;
+                flex-direction: row;
             }
             .tab {
-                width: 100%;
+                width: 50%;
                 text-align: center;
+            }
+            button {
+                width: calc(50% - 10px);
             }
         }
     </style>
@@ -224,6 +238,7 @@
 
             const copyButton = document.createElement('button');
             copyButton.textContent = 'Copy';
+            copyButton.className = 'copy';
             copyButton.onclick = () => copyToClipboard(textarea.id);
             section.appendChild(copyButton);
 
