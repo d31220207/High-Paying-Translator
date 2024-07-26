@@ -63,6 +63,7 @@
             font-family: Calibri, Arial, sans-serif;
             font-size: 16px;
             border-radius: 5px;
+            white-space: pre-wrap;
         }
         .button-container {
             display: flex;
@@ -213,7 +214,6 @@
             if (charCount > limit) {
                 textarea.classList.add('over-limit');
                 charCountElement.classList.add('over-limit');
-                textarea.value = textarea.value.slice(0, limit);
             } else {
                 textarea.classList.remove('over-limit');
                 charCountElement.classList.remove('over-limit');
@@ -241,6 +241,7 @@
             const textarea = document.createElement('textarea');
             textarea.id = `${containerID}_translation_${language.code}`;
             textarea.readOnly = true;
+            textarea.style.whiteSpace = 'pre-wrap';
             textarea.oninput = () => updateCharCount(textarea, charLimit);
             inputContainer.appendChild(textarea);
 
@@ -297,15 +298,33 @@
 
         async function googleTranslate(text, targetLang) {
             const sourceLang = 'auto';
-            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
-            
-            try {
-                const response = await axios.get(url);
-                return response.data[0][0][0];
-            } catch (error) {
-                console.error('Translation error:', error);
-                return 'Translation error';
+            const chunks = splitTextIntoChunks(text, 5000);
+            let translatedChunks = [];
+
+            for (const chunk of chunks) {
+                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(chunk)}`;
+                
+                try {
+                    const response = await axios.get(url);
+                    const translatedChunk = response.data[0].map(sentence => sentence[0]).join(' ');
+                    translatedChunks.push(translatedChunk);
+                } catch (error) {
+                    console.error('Translation error:', error);
+                    translatedChunks.push('Translation error');
+                }
             }
+
+            return translatedChunks.join(' ');
+        }
+
+        function splitTextIntoChunks(text, maxChunkSize) {
+            const chunks = [];
+            let index = 0;
+            while (index < text.length) {
+                chunks.push(text.substr(index, maxChunkSize));
+                index += maxChunkSize;
+            }
+            return chunks;
         }
 
         function resetAll(tabName) {
