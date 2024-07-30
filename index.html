@@ -291,6 +291,14 @@
             textarea.readOnly = true;
             textarea.style.whiteSpace = 'pre-wrap';
             textarea.oninput = () => updateCharCount(textarea, charLimit);
+
+            // Add event listener for 'select' event
+            textarea.addEventListener('select', function () {
+                this.select();
+                document.execCommand('copy');
+                updateCopyButton(this);
+            });
+
             inputContainer.appendChild(textarea);
 
             const charCount = document.createElement('div');
@@ -303,10 +311,25 @@
             const copyButton = document.createElement('button');
             copyButton.textContent = 'Copy';
             copyButton.className = 'copy';
-            copyButton.onclick = () => copyToClipboard(textarea.id, copyButton);
+            copyButton.onclick = () => copyToClipboard(textarea.id);
             section.appendChild(copyButton);
 
             return section;
+        }
+
+        function updateCopyButton(textarea) {
+            const copyButton = textarea.parentNode.nextElementSibling;
+            copyButton.textContent = 'Copied';
+            setTimeout(() => {
+                copyButton.textContent = 'Copy';
+            }, 2000);
+        }
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            document.execCommand('copy');
+            updateCopyButton(element);
         }
 
         function initializeTranslationSections() {
