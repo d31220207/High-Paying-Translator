@@ -292,11 +292,12 @@
             textarea.style.whiteSpace = 'pre-wrap';
             textarea.oninput = () => updateCharCount(textarea, charLimit);
 
-            // Add event listener for 'select' event
-            textarea.addEventListener('select', function () {
-                this.select();
-                document.execCommand('copy');
-                updateCopyButton(this);
+            // Add event listener for 'selectionchange' event
+            textarea.addEventListener('selectionchange', function () {
+                if (this.selectionStart !== this.selectionEnd) {
+                    copyTextToClipboard(this.value);
+                    updateCopyButton(this);
+                }
             });
 
             inputContainer.appendChild(textarea);
@@ -325,10 +326,35 @@
             }, 2000);
         }
 
+        function copyTextToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                // Use the Clipboard API if available
+                navigator.clipboard.writeText(text).then(() => {
+                    console.log('Text copied to clipboard');
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
+            } else {
+                // Fallback to execCommand for older browsers
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";  // Avoid scrolling to bottom
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    console.log('Text copied to clipboard');
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+
         function copyToClipboard(elementId) {
             const element = document.getElementById(elementId);
-            element.select();
-            document.execCommand('copy');
+            copyTextToClipboard(element.value);
             updateCopyButton(element);
         }
 
