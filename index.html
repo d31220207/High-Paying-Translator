@@ -33,11 +33,91 @@
             font-optical-sizing: auto;
             font-style: normal;
             text-align: center;
-            font-size: 24px;
+            position: relative;
         }
 
-        h1 span {
+        .main-title {
+            font-size: 32px;
+            color: white;
+        }
+
+        .sub-title {
+            font-size: 24px;
             color: #3498db;
+        }
+
+        /* Styles for the sidebar toggle button */
+        .side-panel-toggle {
+            position: absolute;
+            top: 20%;
+            left: -40px;
+            transform: translateY(-50%);
+            background: transparent;
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .side-panel-toggle:hover {
+            color: #3498db;
+        }
+
+        /* Styles for the side panel */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background: rgba(44, 44, 44, 0.9);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+            transition: left 0.3s ease;
+            z-index: 1001;
+        }
+
+        .side-panel.open {
+            left: 0;
+        }
+
+        .side-panel-content {
+            padding: 20px;
+        }
+
+        .side-panel-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .side-panel h2 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: white;
+        }
+
+        .redirect-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1em;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .redirect-button:hover,
+        .redirect-button:focus {
+            background-color: #3498db;
+            color: white;
         }
 
         .tabs {
@@ -165,7 +245,7 @@
         .language-label small {
             margin-left: 5px;
             font-size: 12px;
-            font-style: italic;
+            font-style: normal;
             color: #999999;
         }
 
@@ -227,7 +307,24 @@
 
 <body>
     <div class="container">
-        <h1 id="mainTitle">HIGH PAYING <span>TRANSLATOR</span></h1>
+        <h1>
+            <button class="side-panel-toggle" onclick="toggleSidePanel()">☰</button>
+            <div class="main-title">HIGH PAYING</div>
+            <div class="sub-title">TRANSLATOR</div>
+        </h1>
+
+        <!-- Side panel -->
+        <div class="side-panel" id="sidePanel">
+            <div class="side-panel-content">
+                <span class="side-panel-close" onclick="toggleSidePanel()">×</span>
+                <h2>Other Tools</h2>
+                <button class="redirect-button"
+                    onclick="window.open('https://d31220207.github.io/URL-Converter/', '_blank')">
+                    URL Converter
+                </button>
+                <!-- Add more redirect buttons here if needed -->
+            </div>
+        </div>
 
         <div class="tabs">
             <button class="tab active" onclick="openTab(event, 'translator')">Judul</button>
@@ -317,14 +414,14 @@
 
             label.appendChild(flagSpan);
             label.appendChild(document.createTextNode(language.name));
-            
+
             // Add additional text for Indonesia
             if (language.code === 'id') {
                 const additionalText = document.createElement('small');
                 additionalText.textContent = '( Bukan Negara High Paying )';
                 label.appendChild(additionalText);
             }
-            
+
             section.appendChild(label);
 
             const inputContainer = document.createElement('div');
@@ -453,6 +550,21 @@
         }
 
         initializeTranslationSections();
+
+        function toggleSidePanel() {
+            const sidePanel = document.getElementById('sidePanel');
+            sidePanel.classList.toggle('open');
+        }
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', function (event) {
+            const sidePanel = document.getElementById('sidePanel');
+            const sidePanelToggle = document.querySelector('.side-panel-toggle');
+
+            if (!sidePanel.contains(event.target) && event.target !== sidePanelToggle) {
+                sidePanel.classList.remove('open');
+            }
+        });
     </script>
 </body>
 
