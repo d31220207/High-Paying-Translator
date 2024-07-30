@@ -162,6 +162,13 @@
             align-items: center;
         }
 
+        .language-label small {
+            margin-left: 5px;
+            font-size: 12px;
+            font-style: italic;
+            color: #999999;
+        }
+
         .flag-icon {
             margin-right: 5px;
         }
@@ -297,7 +304,6 @@
             }
         }
 
-
         function createLanguageSection(language, containerID, charLimit) {
             const section = document.createElement('div');
             section.className = 'language-section';
@@ -311,6 +317,14 @@
 
             label.appendChild(flagSpan);
             label.appendChild(document.createTextNode(language.name));
+            
+            // Add additional text for Indonesia
+            if (language.code === 'id') {
+                const additionalText = document.createElement('small');
+                additionalText.textContent = '( Bukan Negara High Paying )';
+                label.appendChild(additionalText);
+            }
+            
             section.appendChild(label);
 
             const inputContainer = document.createElement('div');
@@ -441,4 +455,5 @@
         initializeTranslationSections();
     </script>
 </body>
+
 </html>
