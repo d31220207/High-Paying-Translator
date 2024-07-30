@@ -57,11 +57,12 @@
             border: none;
             font-size: 24px;
             cursor: pointer;
-            transition: color 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         .side-panel-toggle:hover {
-            color: #3498db;
+            color: white;
         }
 
         .side-panel {
@@ -91,6 +92,7 @@
             font-size: 24px;
             cursor: pointer;
             color: white;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .side-panel h2 {
@@ -108,7 +110,6 @@
             border: none;
             color: white;
             font-size: 16px;
-            /* Slightly reduced font size */
             text-align: left;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -116,7 +117,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 260px;
-            /* Adjust based on side panel width */
+            -webkit-tap-highlight-color: transparent;
         }
 
         .redirect-button:hover,
@@ -249,7 +250,7 @@
 
         .language-label small {
             margin-left: 5px;
-            font-size: 16px;
+            font-size: 14px;
             font-style: normal;
             color: #999999;
         }
