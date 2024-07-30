@@ -19,7 +19,7 @@
             padding: 0;
             background-color: #2c2c2c;
             color: white;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .container {
@@ -64,7 +64,6 @@
             color: #3498db;
         }
 
-        /* Styles for the side panel */
         .side-panel {
             position: fixed;
             top: 0;
@@ -108,10 +107,16 @@
             background-color: transparent;
             border: none;
             color: white;
-            font-size: 1em;
+            font-size: 16px;
+            /* Slightly reduced font size */
             text-align: left;
             cursor: pointer;
             transition: all 0.3s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 260px;
+            /* Adjust based on side panel width */
         }
 
         .redirect-button:hover,
@@ -163,7 +168,7 @@
             padding: 10px;
             box-sizing: border-box;
             font-family: "Open Sans", sans-serif;
-            font-size: 14px;
+            font-size: 16px;
             font-style: normal;
             border-radius: 5px;
             white-space: pre-wrap;
@@ -187,7 +192,7 @@
             cursor: pointer;
             margin: 5px;
             font-family: "Open Sans", sans-serif;
-            font-size: 14px;
+            font-size: 16px;
             min-width: 100px;
             /* Reduced from 80px */
             max-width: 120px;
@@ -244,7 +249,7 @@
 
         .language-label small {
             margin-left: 5px;
-            font-size: 12px;
+            font-size: 16px;
             font-style: normal;
             color: #999999;
         }
@@ -267,7 +272,7 @@
         .japanese-text {
             font-family: "Noto Sans JP", sans-serif;
             font-optical-sizing: auto;
-            font-size: 14px;
+            font-size: 16px;
             font-style: normal;
         }
 
@@ -321,6 +326,22 @@
                 <button class="redirect-button"
                     onclick="window.open('https://d31220207.github.io/URL-Converter/', '_blank')">
                     URL Converter
+                </button>
+                <button class="redirect-button"
+                    onclick="window.open('https://github.com/afkarxyz/YouTube-Streamer', '_blank')">
+                    YouTube Streamer
+                </button>
+                <button class="redirect-button"
+                    onclick="window.open('https://github.com/afkarxyz/YouTube-Bulk-Translator', '_blank')">
+                    YouTube Bulk Translator
+                </button>
+                <button class="redirect-button"
+                    onclick="window.open('https://github.com/afkarxyz/Window-Helper', '_blank')">
+                    Window Helper
+                </button>
+                <button class="redirect-button"
+                    onclick="window.open('https://github.com/afkarxyz/DAE-Fixer', '_blank')">
+                    DAE Fixer
                 </button>
                 <!-- Add more redirect buttons here if needed -->
             </div>
