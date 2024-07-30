@@ -292,9 +292,9 @@
             textarea.style.whiteSpace = 'pre-wrap';
             textarea.oninput = () => updateCharCount(textarea, charLimit);
 
-            // Add event listener for 'selectionchange' event
-            textarea.addEventListener('selectionchange', function () {
-                if (this.selectionStart !== this.selectionEnd) {
+            // Add event listener for 'mouseup' event
+            textarea.addEventListener('mouseup', function () {
+                if (window.getSelection().toString().length > 0) {
                     copyTextToClipboard(this.value);
                     updateCopyButton(this);
                 }
@@ -450,5 +450,4 @@
         initializeTranslationSections();
     </script>
 </body>
-
 </html>
